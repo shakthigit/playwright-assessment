@@ -43,8 +43,9 @@ This would trigger the script added in the package.json
   
 "test-E2E":"npx playwright test --grep=@E2E --project=chromium"
 
-**grep** this trigger the test tagged with the value '@E2E'
-**project**- Uses the chromium project configurtion
+**grep** - this trigger the test tagged with the value '@E2E'
+
+**project** - Uses the chromium project configurtion
 
 **_In the E2E script added the validations for the below mentioned scenarios_**
 1. Open Link 1: FR  Homepage (https://www.americanexpress.com/fr-fr/?inav=NavLogo) -> click on “Cartes American Express” ->
