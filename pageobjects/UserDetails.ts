@@ -9,13 +9,16 @@ export default class AllCards {
      * Fill user details
      */
     async fillUserDetails() {
+
+        let firstname:string="Michael";
+        let lastname:string="John";
         await this.page.click("//label[@for='MR']");
         const isChecked = await this.page.isChecked("//label[@for='MR']");
         expect(isChecked).toBe(true);
         
         await this.page.waitForSelector("//input[@name='firstName']");
-        await this.page.locator("//input[@name='firstName']").fill("TestUser");
-        await this.page.locator("//input[@name='lastName']").fill("TestUser");
+        await this.page.locator("//input[@name='firstName']").fill(firstname);
+        await this.page.locator("//input[@name='lastName']").fill(lastname);
         await this.page.locator("//input[contains(@id, 'dateOfBirth')]").fill("01/01/1990");
         await this.page.locator("//input[@name='email']").fill("testuser@gmail.com");
         await this.page.locator("//input[@name='mobilePhoneNumber']").fill("0612345678");
@@ -57,8 +60,34 @@ export default class AllCards {
         await this.page.locator("//input[@name='mothersMaidenName']").fill("TestUser");
         await this.page.locator("//input[@name='pin']").fill("1234");
         await this.page.locator("//input[@name='confirmPin']").fill("1234");
+
+        await this.page.locator("//label[@for='marketingEmailPreferences-false']/span").click();
+        console.log("Clicked on marketingEmailPreferences-false with span");
+        await this.page.waitForTimeout(3000);
+        await this.page.locator("//label[@for='marketingEmailPreferences-false']/span").check();
+        console.log("Checked on marketingEmailPreferences-false");
+        await this.page.waitForTimeout(3000);
         await this.page.locator("//label[@for='marketingEmailPreferences-false']").click();
-        await this.page.locator("//label[@for='marketingSMSPhonePostalPreferences-OPT_OUT']").click();
+        console.log("Clicked on marketingEmailPreferences-false");
+
+        await this.page.locator("//label[@for='marketingSMSPhonePostalPreferences-OPT_OUT']/span").click();
         await this.page.locator("//button[contains(text(), 'Soumettre')]").click();
+        await this.page.waitForLoadState("domcontentloaded");
+        await this.page.waitForSelector("//button[contains(text(),'Fermez la Page')]");
+        //Check if the page is visible
+        const buttonStatus=await this.page.locator("//button[contains(text(),'Fermez la Page')]").isVisible();
+        //Assertion on form submission 
+        expect(buttonStatus,"The cart flow not submitted successfully").toBe(true);
+
+        //Confirmation message
+let confirmationMessage = await this.page.locator("//*[starts-with(@class,'heading-4')]/div").textContent();
+console.log(confirmationMessage);
+//Assertion on confirmation message after submitting the form
+ expect(confirmationMessage).toContain("Merci");
+ expect(confirmationMessage).toContain("nous vous remercions de l'intérêt que vous portez à la CARTE GOLD AMERICAN EXPRESS");
+ expect(confirmationMessage).toContain(lastname);
+//Close the page
+await this.page.locator("//button[contains(text(),'Fermez la Page')]").click();
+        
     }
 }
